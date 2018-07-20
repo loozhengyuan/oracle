@@ -223,7 +223,7 @@ cd civil-service-college
 
 Clone the repository by running the following command
 ```shell
-git clone http://gitlab.zhengyuan.me/civil-service-college/oracle.git
+git clone https://github.com/loozhengyuan/oracle.git
 ```
 
 ### Step 4: Create a virtualenv for the project
@@ -448,6 +448,13 @@ This can be easily done using DigitalOcean's platform by taking snapshot of the 
 
 ### Accessing the admin portal
 Majority of the customisation can be managed via the admin portal. If you would like to add word or amend the definitions, you can enter the admin portal with this url: [https://oracle.digitalcapabilities.team/admin](https://oracle.digitalcapabilities.team/admin)
+
+##### Login Page
+![Techxicon Login](/docs/img/admin/login.png)
+
+##### Dashboard
+![Dashboard](/docs/img/admin/dashboard.png)
+
 
 ### Editing raw files/code
 

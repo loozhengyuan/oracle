@@ -2,6 +2,37 @@
 
 Developed by Digital Capabilities Team in Civil Service College, Oracle is a course pairing generator that serves as a heuristic/tool for public officers, agencies, and College's staff to quickly generate a list of course combinations that satisfy the learning outcomes that a user group desires to learn.
 
+## Table of Contents
+
+- [Methodology](#methodology)
+  - [Step 1: Collate a list of course outcomes](#step-1-collate-a-list-of-course-outcomes)
+  - [Step 2: Determine a list of courses that fulfills the outcomes](#step-2-determine-a-list-of-courses-that-fulfills-the-outcomes)
+  - [Step 3: Generate a unique set of courses that can fulfill the learning outcomes](#step-3-generate-a-unique-set-of-courses-that-can-fulfill-the-learning-outcomes)
+  - [Step 4: Create a powerset](#step-4-create-a-powerset)
+  - [Step 5: Each combination is ranked accordingly](#step-5-each-combination-is-ranked-accordingly)
+- [Preparation](#preparation)
+  - [Domain Registration](#domain-registration)
+  - [Web Hosting](#web-hosting)
+  - [Accessing your virtual server via SSH](#accessing-your-virtual-server-via-ssh)
+- [Installation](#installation)
+  - [Assumptions](#assumptions)
+  - [Step 1: Setting up your new server](#step-1-setting-up-your-new-server)
+  - [Step 2: Installing database server](#step-2-installing-database-server)
+  - [Step 3: Retrieve files using git](#step-3-retrieve-files-using-git)
+  - [Step 4: Create a virtualenv of the project](#step-4-create-a-virtualenv-for-the-project)
+  - [Step 5: Install required dependencies](#step-5-install-required-dependencies)
+  - [Step 6: Initial settings](#step-6-initial-settings)
+  - [Step 7: Setup webserver](#step-7-setup-webserver)
+  - [Step 8: Go live!](#step-8-go-live!)
+- [Maintenance](#maintenance)
+  - [Accessing the admin portal](#accessing-the-admin-portal)
+  - [Adding new users](#adding-new-users)
+  - [Adding new terms](#adding-new-terms)
+- [Roadmap](#roadmap)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
+
+
 ## Methodology
 This example helps to understand the logic, but does not use the exact course or outcome data.
 
@@ -25,7 +56,7 @@ List of selected outcomes and their corresponding course associations
 | DGG6         | CSR01, PIP10, PELP1 |
 | UEB1         | MTP10, SDS10|
 
-##### Step 3: Generate all a unique set of courses that can fulfill the three learning outcomes
+##### Step 3: Generate a unique set of courses that can fulfill the learning outcomes
 
 ```
 all_courses = [CSR01, PIP10, CSR01, PIP10, PELP1, PELP2, MTP10, SDS10, CSR02]
@@ -69,26 +100,35 @@ SDS10
 
 ## Preparation
 
-##### Domain Registration
+### Domain Registration
 
 At the very least, this app should have a public domain name for two main reasons:
 1. An easy way for users to remember the site URL
-2. Ability to use free SSL certs like [Let's Encrypt](https://docs.djangoproject.com/en/2.0/)
+2. Ability to use free SSL certs like [Let's Encrypt](https://letsencrypt.org/)
 
 The current domain name `digitalcapabilities.team` is managed through [Namecheap](https://www.namecheap.com/). 
 
-##### Web Hosting
+### Web Hosting
 
 Next, the web app needs to sit somewhere but generally I would recommend it to sit on Linux server that is based in Singapore.
 
 The current app is hosted on [DigitalOcean](https://www.digitalocean.com/). They offer Linux Virtual Private Servers (VPS), or Droplets as they call it, at an affordable rate of USD$5/month. 
+
+### Accessing your virtual server via SSH
+By default, DigitalOcean allows you to access console via browser, but it is often laggy so SSH is preferred. Assuming you are using Windows, you can download [PuTTY](https://www.putty.org/), [KiTTY](http://www.9bis.net/kitty/), or [MobaXterm](https://mobaxterm.mobatek.net/) to access it. 
+
+##### Connecting using PuTTY Client
+![SSH Login](docs/img/ssh/login.png)
+
+_Tip:_
+It is advisable to __ONLY__ open port `22` when you need it and to block the port once you are done accessing it.
 
 ## Installation
 
 ##### Assumptions
 1. Web server, database, app to be installed in a single server
 2. Server is based on Debian 9.4
-3. You have `root` privileges
+3. You have `root` access, or at least `sudo` access
 
 ### Step 1: Setting up your new server
 
@@ -102,7 +142,7 @@ Run this command to install Python (which should already have been installed) an
 sudo apt install -y python3 python3-pip python3-dev
 ```
 
-### Step 2: Installing database server (Optional if using existing database)
+### Step 2: Installing database server
 By default, Django uses SQLite3 as the database server. However, since we intend to use the Full Text Search function of PostgreSQL, we would need to use this instead.
 For the purpose of this tutorial, we will be showing how to setup a PostgreSQL database server on the same host.
 
@@ -152,18 +192,13 @@ sudo service postgresql restart
 ##### Creating users and permissions
 
 We're going to use the default admin account `postgres` to create a new admin account. We are going to use `cscadmin` as the username; you can set the password during the prompt. The first command will create a new user in postgresql, whereas the second command will create a new database with the same name as the user, which is `cscadmin` in this case.
-
-###### If you have `root` access:
 ```shell
 su - postgres -c 'createuser --interactive --pwprompt'
 su - postgres -c 'createdb -O cscadmin cscadmin'
 ```
 
-###### If you only have `sudo` access:
-```shell
-sudo -u postgres createuser --interactive --pwprompt
-sudo -u postgres createdb -O cscadmin cscadmin
-```
+_Tip:_
+If you do not have `root` access, use `sudo -u` instead of `su -`.
 
 ##### Create database schemas
 Lastly, for the purpose of this webapp, we will be confining the database tables under the `oracle` schema.
@@ -173,7 +208,7 @@ sudo psql -U cscadmin -c 'CREATE SCHEMA oracle;'
 
 For more information on how to configure a database server like PostgreSQL, visit [this article](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04) on DigitalOcean would help to give you a brief introduction.
 
-### Step 3: Retrieve files using `git`
+### Step 3: Retrieve files using git
 
 The easiest way to get the files is to have `git` manage the files. You can install `git` with this command:
 ```shell
@@ -216,7 +251,7 @@ To install the last-known working version of the packages, use the `requirements
 pip install -r requirements.txt
 ```
 
-(Optional) If you prefer to install the up-to-date version of the packages instead, run this command instead:
+_(Optional)_ If you prefer to install the up-to-date version of the packages instead, run this command instead:
 ```shell
 pip install django psycopg2 psycopg2-binary gunicorn
 ```
@@ -299,7 +334,7 @@ python manage.py collectstatic
 
 ##### Test run
 
-Since Techxicon runs on Django, they provided a very very good [https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/](documentation) of checklist that needs to be completed before deploying. Some of these can even be automated using the following command:
+Since Oracle runs on Django, they provided a very very good [https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/](documentation) of checklist that needs to be completed before deploying. Some of these can even be automated using the following command:
 ```shell
 python manage.py check --deploy
 ```
@@ -309,15 +344,18 @@ Test run the app using this command (0.0.0.0:80)
 python manage.py runserver 0:80
 ```
 
-
 ### Step 7: Setup Webserver
 
-Currently, the easiest way to deploy Techxicon is by using Caddy. Alternatively, as recommended by Gunicorn, you can deploy this on Nginx as well.
+Currently, the easiest way to deploy Oracle is by using Caddy. Alternatively, as recommended by Gunicorn, you can deploy this on Nginx as well.
+
+##### Installing Caddy
 
 One-click install script by Caddy
 ```shell
 curl https://getcaddy.com | bash -s personal
 ```
+
+##### Configuring Caddy
 
 Create and edit Caddyfile
 ```shell
@@ -331,7 +369,7 @@ Copy and paste these settings
 # ~/Caddyfile
 
 oracle.digitalcapabilities.team {
-    proxy / localhost:8001 {
+    proxy / localhost:8002 {
         transparent
     }
 }
@@ -342,13 +380,13 @@ oracle.digitalcapabilities.team/static {
 
 ```
 
-Increase file descriptor limit from 1024 to 8192 by editing the `/etc/security/limits.conf` file
+##### Increasing file descriptor limit
 
+Increase file descriptor limit from 1024 to 8192 by editing the `/etc/security/limits.conf` file
 ```shell
 sudo nano /etc/security/limits.conf
 ```
 
-###### If you have `root` access:
 Add these two lines in the file:
 ```shell
 # /etc/security/limits.conf
@@ -357,114 +395,97 @@ root               soft    nofile          8192
 root               hard    nofile          8192
 ```
 
-###### If you only have `sudo` access:
-Add these two lines in the file:
-```shell
-# /etc/security/limits.conf
+_Tip:_
+If you do not have `root` access, you should change `root` to `*` instead.
 
-*                  soft    nofile          8192
-*                  hard    nofile          8192
-```
+### Step 8: Go live
 
-### Step 8: Go live!
-
-Reboot server to make sure everything is in order and persists restarts
+_(Optional)_ Reboot server to make sure everything is in order and persists restarts
 ```shell
 sudo reboot
 ```
 
-Run wsgi server
-```shell
-screen
-cd ~/civil-service-college/oracle
-. venv/bin/activate
-gunicorn oracle.wsgi -b 0:8001
-```
+##### Run web server
+To run Caddyserver, run the `caddy` command. The `caddy` command looks for a `Caddyfile`(created in the previous step) and deploys a webserver according to the configurations in that file. Make sure that port numbers `80` and `443` are not blocked by firewall (which should not be the case by default).
 
-Run web server
 ```shell
 screen
 cd ~
 caddy
 ```
 
-List of `screen` commands:
+##### Run WSGI server
+Gunicorn is activated using the `gunicorn` command supplied with two main parameters. The last parameter at the back `-b 0:8002` means that Gunicorn will listen to all ip addresses `0.0.0.0` and bound to port `8002`. 
+
 ```shell
-screen          # To create a new screen
-screen -ls      # To list the list of created sessions
-screen -d       # To disconnect from current screen (or CTRL-A -> CTRL-D)
-screen -r XXXX  # To reconnect to a specific screen
+screen
+cd ~/civil-service-college/oracle
+. venv/bin/activate
+gunicorn oracle.wsgi -b 0:8002
 ```
 
-### Step 9: Using `systemd` to manage (Optional)
+_Tip:_
+If you want, you can run many instances of Django apps on the same Caddy server. This can be done by [editing the `Caddyfile`](#step-7-setup-webserver) and running another instance using a __different port__.
 
-##### Gunicorn
-
-First, lets create a Gunicorn service file
+##### Managing screen sessions
+In subsequent sessions, you can resume the sessions by typing the following command. This will list the session number that you should reconnect to:
 ```shell
-sudo nano /etc/systemd/system/gunicorn.service
+screen -ls
 ```
 
-Copy this into the file
+For example, you would like to resume back to 1429:
 ```shell
-# /etc/systemd/system/gunicorn.service
-
-[Unit]
-Description=gunicorn daemon
-After=network.target
-
-[Service]
-User=root
-Group=wheel
-WorkingDirectory=~/civil-service-college/oracle
-ExecStart=~/civil-service-college/oracle/venv/bin/gunicorn --workers 3 --bind unix:~/civil-service-college/oracle/oracle.sock oracle.wsgi:application
-
-[Install]
-WantedBy=multi-user.target
+screen -r 1429
 ```
 
-Next, we'll start the service and enable it to start at boot:
-```shell
-sudo systemctl start gunicorn
-sudo systemctl enable gunicorn
-```
-
-Verify that the service is running by running:
-```shell
-sudo systemctl status gunicorn
-```
+_Tip:_
+If you would like to exit or change session, you can do so by pressing `CTRL-A` followed by `CTRL-D`.
 
 ## Maintenance
-
-### Golden Rule #1: Backup
 
 Whatever changes you intend to make, do make sure you back up everything so that if anything goes wrong, you have a last known working copy of the files/droplet. 
 This can be easily done using DigitalOcean's platform by taking snapshot of the droplet. For more information, check out DigitalOcean's [documentation page on its Snapshots](https://www.digitalocean.com/docs/images/snapshots/) feature.
 
-### Content Management
+### Accessing the admin portal
+Majority of the customisation can be managed via the admin portal. If you would like to add word or amend the definitions, you can enter the admin portal with this url: [https://oracle.digitalcapabilities.team/admin](https://oracle.digitalcapabilities.team/admin)
 
-Majority of the customisation can be managed via the admin portal. If you would like to add word or amend the definitions, you can enter the admin portal with this url:
+### Editing raw files/code
+
+_Disclaimer:_
+While some changes require changes to the code, make sure you know what you are doing because it may cause irreversible changes to the webapp. As a precausion, be sure to backup everything before you make attempt the changes.
+
+##### Pushing changes to production server
+
+The first step would be to look for the screen session that you initially used to run Gunicorn. This can be done by running `screen -ls` and reconnecting one by one to find the right session.
+```shell
+screen -ls
+screen -r XXXX
 ```
-https://oracle.digitalcapabilities.team/admin
-```
+Once you have identified the correct Gunicorn instance, press `CTRL-C` to stop the Gunicorn instance.
 
-### Code Management
-
-##### Getting updates
-Periodically, the code may be updated and you would want to make the changes reflected.
-The golden rule would be to backup all settings first, which can be easily done using 
-
-Run this command pull changes from the `Git` repository
+Using git, pull the updated changes from this or your forked repository:
 ```shell
 git pull
 ```
 
-## Credits
+Once all files are up-to-date, you can re-deploy using the following command:
+```shell
+gunicorn oracle.wsgi -b 0:8002
+```
+
+## Roadmap
+
+### Suggested Features
+- Auto-update course information periodically
+- About section (to explain more about the tool)
+- Select all in a column
+- Curated combination of learning outcomes
+- Mouseover explanation of user type
+
+## Acknowledgements
 
 Many content posted here comes from a wealth of resources available on DigitalOcean's [docs](https://www.digitalocean.com/docs/) and [tutorials](https://www.digitalocean.com/community/tutorials) page. In addition, Django also provides a very very good [documentation](https://docs.djangoproject.com/en/2.0/) on the framework. 
 
-Special thanks to my colleagues at DCT and CSC for contributing to this, in a way or another.
- 
 ## License
 
 This project is licensed under the GNU GPLv3 License

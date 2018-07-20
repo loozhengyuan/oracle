@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center mt-5 mx-auto">
+            <h1 class="mb-4">Settings</h1>
+            <form class="form-inline justify-content-center" action="{% url 'step3' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="curator" name="curator" value="{{ outcomes_selected }}">
+                <div class="form-group mr-sm-2 mx-sm-4 mx-md-2 mb-2">
+                    <label for="display_limit" class="form-check-label mr-sm-2">Display Limit:</label>
+                    <input type="number" class="form-control" id="display_limit" name="display_limit" value="{{ max_display }}">
+                </div>
+                <div class="form-group mr-sm-2 mx-sm-4 mx-md-2 mb-2">
+                    <label for="model_limit" class="form-check-label mr-sm-2">Model Limit:</label>
+                    <input type="number" class="form-control" id="model_limit" name="model_limit" value="{{ max_model }}">
+                </div>
+                <!--<div class="custom-control custom-checkbox my-1 mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="upcoming_only">
+                    <label class="custom-control-label text-muted" for="upcoming_only">Show upcoming only</label>
+                </div>-->
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary mb-2">Refresh</button>
+                </div>
+            </form>
+            <p class="lead small text-muted">Warning: Using a larger model limit may take a longer time than expected.</p>
+        </div>
+    </div>
+</div>
+<hr class="mb-1 mt-1">
+
+
+<!-- Form -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center mb-4 mt-5">
+            <h1 class="display-4">Showing {{ max_display }} of {{ max_combi }} combinations</h1>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Model</th>
+                <th scope="col">Training Hours</th>
+                <th scope="col">Coverage Pct</th>
+            </tr>
+            </thead>
+            {% for item in models %}
+            <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ item.0|safe }}</td>
+                <td>{{ item.1 }}</td>
+                <td>{{ item.2 }}</td>
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row mt-5 mb-5">
+        <div class="col-lg-12">
+            <button type="button" class="btn btn-danger btn-lg float-left" onclick="window.history.back()">Back</button>
+            <a href="/" role="button" class="btn btn-success btn-lg float-right">Home</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

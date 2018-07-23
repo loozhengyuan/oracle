@@ -44,7 +44,6 @@ The initial step of the process would be to have the user select a list of learn
 ### Step 2: Determining a list of courses that fulfills selected outcomes
 Once the user submits, the backend will determine, based on the relationships that we have previously defined, on what are the courses that are associated with every learning outcome.
 
-Example:
 | Outcome Code | Course Associations |
 | ------------ | ------------------ |
 | DSG1         | CSR01, PIP10 |

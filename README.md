@@ -5,11 +5,11 @@ Developed by Digital Capabilities Team in Civil Service College, Oracle is a cou
 ## Table of Contents
 
 - [Methodology](#methodology)
-  - [Step 1: Collate a list of course outcomes](#step-1-collate-a-list-of-course-outcomes)
-  - [Step 2: Determine a list of courses that fulfills the outcomes](#step-2-determine-a-list-of-courses-that-fulfills-the-outcomes)
-  - [Step 3: Generate a unique set of courses that can fulfill the learning outcomes](#step-3-generate-a-unique-set-of-courses-that-can-fulfill-the-learning-outcomes)
-  - [Step 4: Create a powerset](#step-4-create-a-powerset)
-  - [Step 5: Each combination is ranked accordingly](#step-5-each-combination-is-ranked-accordingly)
+  - [Step 1: Selecting a list of outcomes](#step-1-selecting-a-list-of-outcomes)
+  - [Step 2: Determining a list of courses that fulfills selected outcomes](#step-2-determining-a-list-of-courses-that-fulfills-selected-outcomes)
+  - [Step 3: Generating a unique set of courses from all associated courses](#step-3-generating-a-unique-set-of-courses-from-all-associated-courses)
+  - [Step 4: Creating a powerset combination](#step-4-creating-a-powerset-combination)
+  - [Step 5: Determining the best combination](#step-5-determining-the-best-combination)
 - [Preparation](#preparation)
   - [Domain Registration](#domain-registration)
   - [Web Hosting](#web-hosting)
@@ -26,45 +26,40 @@ Developed by Digital Capabilities Team in Civil Service College, Oracle is a cou
   - [Step 8: Go live!](#step-8-go-live!)
 - [Maintenance](#maintenance)
   - [Accessing the admin portal](#accessing-the-admin-portal)
-  - [Adding new users](#adding-new-users)
-  - [Adding new terms](#adding-new-terms)
+  - [Editing key information](#editing-key-information)
+  - [Editing raw files/code](#editing-raw-files/code)
 - [Roadmap](#roadmap)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
 
 ## Methodology
-This example helps to understand the logic, but does not use the exact course or outcome data.
+This example merely helps to understand the methodology behind how this works when a user interacts with the site. It includes bit and pieces of information that may not be fully representative of the mechanism behind this.
 
-##### Step 1: Collate a list of course outcomes
+### Step 1: Selecting a list of outcomes
+The initial step of the process would be to have the user select a list of learning outcomes that they are interested to explore.
 
-List of course outcomes
+![Selecting Learning Outcomes](/docs/img/methodology/select_learning_outcomes.png)
 
-| Outcome Code | Outcome Descriptor |
-| ------------ | ------------------ |
-| DSG1         | Demonstrate willingness to contribute new ideas on ways of working to achieve the desired goals of the organisation/transformation. |
-| DGG6         | Recognise when regulations might need to shift to manage the impact of emerging digital solutions. |
-| UEB1         | Identify the available tools (e.g. data analytics, behavioural insights and cost-benefit analysis) to design and evaluate digital services, policies and programmes. |
+### Step 2: Determining a list of courses that fulfills selected outcomes
+Once the user submits, the backend will determine, based on the relationships that we have previously defined, on what are the courses that are associated with every learning outcome.
 
-##### Step 2: Determine a list of courses that fulfills the outcomes
-
-List of selected outcomes and their corresponding course associations
-
+Example:
 | Outcome Code | Course Associations |
 | ------------ | ------------------ |
 | DSG1         | CSR01, PIP10 |
 | DGG6         | CSR01, PIP10, PELP1 |
-| UEB1         | MTP10, SDS10|
+| UEB1         | MTP10, SDS10 |
 
-##### Step 3: Generate a unique set of courses that can fulfill the learning outcomes
+### Step 3: Generating a unique set of courses from all associated courses
+As seen above, each outcome are associated with a list of courses. However, not all of them are relevant to generate the combinations; we will need to (1) remove duplicates, and (2) remove courses that do not have an upcoming date available. For this example, we assume all courses listed here do have an upcoming date, but those that do not have are removed in reality.
 
 ```
 all_courses = [CSR01, PIP10, CSR01, PIP10, PELP1, PELP2, MTP10, SDS10, CSR02]
 unique_courses = [CSR01, PIP10, PELP1, MTP10, SDS10]
 ```
-
-##### Step 4: Create a powerset
-
+### Step 4: Creating a powerset combination
+Now that we have a list of 5 courses, there are many many combinations of courses that a user can take. In order to find all of such combinations (NOT permutations), we will use the mathematical concept of [powerset](https://en.wikipedia.org/wiki/Power_set) to generate this outcome. This is done by using the `chain.from_iterable()` class from the Python `itertools` library, which is further explained on [Python docs](https://docs.python.org/3/library/itertools.html#itertools.chain.from_iterable).
 
 ```
 CSR01
@@ -88,15 +83,10 @@ CSR01 + PIP10 + SDS10
 ...
 ```
 
-##### Step 5: Each combination is ranked accordingly
+### Step 5: Determining the best combination
+With every combination available, Python looks up every course in every combination to find out its (1) duration, and (2) degree of coverage. The results of this is rendered in a tabular format shown here:
 
-```
-CSR01
-PIP10
-PELP1
-MTP10
-SDS10
-```
+![Output](/docs/img/methodology/output.png)
 
 ## Preparation
 
@@ -455,6 +445,18 @@ Majority of the customisation can be managed via the admin portal. If you would 
 ##### Dashboard
 ![Dashboard](/docs/img/admin/dashboard.png)
 
+
+### Editing key information
+The main data Oracle needs are the course information, learning outcomes, and the relationship between them. The course information in the database is currently a snapshot of the courses, and may need to be updated periodically. The mappings can be added or amended by navigating to the [courses page](#course-outcome-mappings) and editing it accordingly.
+
+##### Course Information
+![Course List](/docs/img/admin/course_list.png)
+
+##### Learning Outcomes
+![Outcome List](/docs/img/admin/outcome_list.png)
+
+##### Course-Outcome Mappings
+![Mappings](/docs/img/admin/mappings.png)
 
 ### Editing raw files/code
 

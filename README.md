@@ -450,7 +450,7 @@ This can be easily done using DigitalOcean's platform by taking snapshot of the 
 Majority of the customisation can be managed via the admin portal. If you would like to add word or amend the definitions, you can enter the admin portal with this url: [https://oracle.digitalcapabilities.team/admin](https://oracle.digitalcapabilities.team/admin)
 
 ##### Login Page
-![Techxicon Login](/docs/img/admin/login.png)
+![Oracle Login](/docs/img/admin/login.png)
 
 ##### Dashboard
 ![Dashboard](/docs/img/admin/dashboard.png)

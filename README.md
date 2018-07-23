@@ -23,7 +23,7 @@ Developed by Digital Capabilities Team in Civil Service College, Oracle is a cou
   - [Step 5: Install required dependencies](#step-5-install-required-dependencies)
   - [Step 6: Initial settings](#step-6-initial-settings)
   - [Step 7: Setup webserver](#step-7-setup-webserver)
-  - [Step 8: Go live!](#step-8-go-live!)
+  - [Step 8: Go live!](#step-8-go-live)
 - [Maintenance](#maintenance)
   - [Accessing the admin portal](#accessing-the-admin-portal)
   - [Editing key information](#editing-key-information)

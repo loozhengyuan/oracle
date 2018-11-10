@@ -46,7 +46,7 @@ This example merely helps to understand the methodology behind how this works wh
 ### Step 1: Selecting a list of outcomes
 The initial step of the process would be to have the user select a list of learning outcomes that they are interested to explore.
 
-![Selecting Learning Outcomes](/docs/img/methodology/select_learning_outcomes.png)
+![Selecting Learning Outcomes](docs/img/methodology/select_learning_outcomes.png)
 
 ### Step 2: Determining a list of courses that fulfills selected outcomes
 Once the user submits, the backend will determine, based on the relationships that we have previously defined, on what are the courses that are associated with every learning outcome.
@@ -92,7 +92,7 @@ CSR01 + PIP10 + SDS10
 ### Step 5: Determining the best combination
 With every combination available, Python looks up every course in every combination to find out its (1) duration, and (2) degree of coverage. The results of this is rendered in a tabular format shown here:
 
-![Output](/docs/img/methodology/output.png)
+![Output](docs/img/methodology/output.png)
 
 ## Preparation
 

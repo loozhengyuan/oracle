@@ -441,23 +441,23 @@ This can be easily done using DigitalOcean's platform by taking snapshot of the 
 Majority of the customisation can be managed via the admin portal. If you would like to add word or amend the definitions, you can enter the admin portal with this url: [https://oracle.digitalcapabilities.team/admin](https://oracle.digitalcapabilities.team/admin)
 
 ##### Login Page
-![Oracle Login](/docs/img/admin/login.png)
+![Oracle Login](docs/img/admin/login.png)
 
 ##### Dashboard
-![Dashboard](/docs/img/admin/dashboard.png)
+![Dashboard](docs/img/admin/dashboard.png)
 
 
 ### Editing key information
 The main data Oracle needs are the course information, learning outcomes, and the relationship between them. The course information in the database is currently a snapshot of the courses, and may need to be updated periodically. The mappings can be added or amended by navigating to the [courses page](#course-outcome-mappings) and editing it accordingly.
 
 ##### Course Information
-![Course List](/docs/img/admin/course_list.png)
+![Course List](docs/img/admin/course_list.png)
 
 ##### Learning Outcomes
-![Outcome List](/docs/img/admin/outcome_list.png)
+![Outcome List](docs/img/admin/outcome_list.png)
 
 ##### Course-Outcome Mappings
-![Mappings](/docs/img/admin/mappings.png)
+![Mappings](docs/img/admin/mappings.png)
 
 ### Editing raw code
 
